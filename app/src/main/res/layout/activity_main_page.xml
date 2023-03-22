@@ -35,7 +35,7 @@
             android:id="@+id/start_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click Jack Ultraman to Start"
+            android:text="Click UltraMan Jack to Start"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#ffffff"
