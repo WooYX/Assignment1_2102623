@@ -16,6 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Level Selection"
+            android:textColor="#FFFFFF"
+            android:background="#666666"
             android:textSize="24sp"
             android:textStyle="bold"/>
 

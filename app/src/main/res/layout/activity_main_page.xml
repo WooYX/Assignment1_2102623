@@ -23,6 +23,7 @@
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/image_button"
             android:layout_width="147dp"
@@ -31,19 +32,39 @@
             android:layout_marginHorizontal="120dp"
             android:layout_marginVertical="35dp"
             android:src="@drawable/jack" />
+
+        <ImageView
+            android:id="@+id/rank_button"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentBottom="false"
+            android:layout_marginHorizontal="305dp"
+            android:layout_marginVertical="70dp"
+            android:src="@drawable/ranks" />
+        <TextView
+            android:id="@+id/show_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="308dp"
+            android:layout_marginTop="152dp"
+            android:background="#FF018786"
+            android:text="Ranking"
+            android:textColor="#FFFFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/start_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click UltraMan Jack to Start"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="666dp"
-            android:layout_marginLeft="90dp"
-            android:background="#000000"/>
-
+            android:layout_marginLeft="85dp"
+            android:layout_marginTop="660dp"
+            android:text="Click Ultraman Jack to Start"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
     </RelativeLayout>

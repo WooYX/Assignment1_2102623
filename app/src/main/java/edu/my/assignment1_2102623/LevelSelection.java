@@ -50,6 +50,4 @@ public class LevelSelection extends AppCompatActivity {
                 finish();
             }
 
-
-
 }

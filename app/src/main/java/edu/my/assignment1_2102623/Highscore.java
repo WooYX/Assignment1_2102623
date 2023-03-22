@@ -98,7 +98,7 @@ public class Highscore extends AppCompatActivity {
     //method to display retrieved data
     private void displayScores() {
         StringBuilder sb = new StringBuilder();
-        sb.append("High Scores:\n\n");
+        sb.append("Player Ranking:\n\n");
         for (int i = 0; i < scoreList.size(); i++) {
             Score score = scoreList.get(i);
             sb.append(i+1).append(". ").append(score.getName()).append(": ").append(score.getScore()).append("\n");
