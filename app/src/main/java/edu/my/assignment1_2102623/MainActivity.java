@@ -4,13 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -18,83 +18,94 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     //initialize variables
     private TableLayout tableLayout;
-    private Button highlightedButton;
-    private int numRows = 2;
-    private int numCols = 2;
+    private ImageView highlightedButton;
+    private int level;
+    private int numRows =1;
+    private int numCols =1;
     private int score=0;
-    private CountDownTimer timer;
+    public CountDownTimer timer;
+    private static final String GAME_OVER_MESSAGE = "Game Over";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        tableLayout = new TableLayout(this); //set up table layout
+        Intent intent = getIntent();
+        level = intent.getIntExtra("level", 0);
+        tableLayout = new TableLayout(this);//set up table layout
+        tableLayout.setGravity(Gravity.CENTER);
+        tableLayout.setBackgroundResource(R.drawable.cool);
         createButtons(); //create button for table
         highlightRandomButton();//Highlight a random button
+
         setContentView(tableLayout);  //set Table Layout
     }
 
-    //method to create button into table layout using for loop for row numbers and column numbers
-    private void createButtons() {
-        for (int i = 0; i < numRows; i++) {
-            TableRow tableRow = new TableRow(this);
-            tableLayout.addView(tableRow);
 
-            for (int j = 0; j < numCols; j++) {
-                Button button = new Button(this);
-                button.setLayoutParams(new TableRow.LayoutParams(
-                        TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.MATCH_PARENT,
-                        1.0f));
+//method to create button into table layout using for loop for row numbers and column numbers
+private void createButtons() {
+    for (int i = 0; i < numRows; i++) {
+        TableRow tableRow = new TableRow(this);
+        tableLayout.addView(tableRow);
 
-                //Set up on click listener when user select highlighted view
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (view == highlightedButton) {
-                            AddScore();
-                            increaseTableSize();
-                            highlightRandomButton();
-                            startTimer();
-                        }
+        for (int j = 0; j < numCols+level; j++) {
+            ImageView button = new ImageView(this);
+            button.setBackgroundResource(R.drawable.ultramanicon);
+
+            // Set the layout parameters to be square
+            int size = getResources().getDisplayMetrics().widthPixels / numCols+level;
+            button.setLayoutParams(new TableRow.LayoutParams(size, size));
+
+            // Set up on click listener when user select highlighted view
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (view == highlightedButton) {
+                        highlightedButton.setBackgroundResource(R.drawable.ultramanicon);
+                        AddScore();
+                        increaseTableSize();
+                        highlightRandomButton();
+                        startTimer();
                     }
-                });
-                tableRow.addView(button);
-            }
+                }
+            });
+            tableRow.addView(button);
         }
     }
+}
+
+
+
 
     //method to randomly highlight a button inside table
     private void highlightRandomButton() {
         int randomRow = (int) (Math.random() * numRows);
         int randomCol = (int) (Math.random() * numCols);
         TableRow tableRow = (TableRow) tableLayout.getChildAt(randomRow);
-        Button button = (Button) tableRow.getChildAt(randomCol);
-        button.setBackgroundColor(Color.YELLOW);
+        ImageView button = (ImageView) tableRow.getChildAt(randomCol);
+        button.setBackgroundResource(R.drawable.enemy);
         highlightedButton = button;
     }
 
     //method to increase the table size
     private void increaseTableSize() {
-        if (numRows >= 6 && numCols >= 6) {
-            endGame();
+        if (numRows >= level+7 && numCols >= level+7) {
+            endGame(GAME_OVER_MESSAGE);
             return;
         }
 
-        else {
-            numCols++;
-            numRows++;
+        // Wait for timer to finish before increasing table size
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+            return;
         }
+
+        numCols++;
+        numRows++;
 
         tableLayout.removeAllViews();
         createButtons();
-    }
-
-    //method to show when game ends
-    private void endGame() {
-
-        Toast.makeText(this, "Game Over", Toast.LENGTH_SHORT).show();
-        showNameDialog();
+        startTimer();
     }
 
     //Timer method to set up count down for each level
@@ -106,17 +117,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                endGame();
+                increaseTableSize();
             }
         }.start();
     }
 
-    //method to ask user enter his name
+
+    //method to show when game ends
+    private void endGame(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        showNameDialog();
+    }
+
     private void showNameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Your total score is "+score+"\n Please Enter your name:");
+        builder.setTitle("Your total score is " + score + "\n Please Enter your name:");
 
-        final EditText input = new EditText(this);
+        EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
@@ -141,11 +158,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                finish(); // finish the activity when the user clicks cancel
+            }
+        });
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                finish(); // finish the activity when the user cancels the dialog
             }
         });
 
         builder.show();
     }
+
     //Method to add score
     public void AddScore(){
         score+=1;
@@ -156,9 +182,11 @@ public class MainActivity extends AppCompatActivity {
     public void setScore(int score) {
         this.score = score;
     }
+
     //method to get score
     public int getScore(){
         return score;
     }
+
 }
 

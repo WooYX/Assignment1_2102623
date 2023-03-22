@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -28,6 +30,8 @@ public class Highscore extends AppCompatActivity {
 
         tv_score = findViewById(R.id.tv_score);
         tv_score.setTextSize(20);
+        tv_score.setTextColor(Color.WHITE);
+        tv_score.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD));
         //Load Score from shared preferences
         SharedPreferences preferences = getSharedPreferences("PREPS",0);
         YourScore = preferences.getInt("YourScore",0);
